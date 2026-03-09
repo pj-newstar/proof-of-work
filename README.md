@@ -2,13 +2,13 @@
 
 A simple command-line tool for generating, solving proof-of-work challenges, and wrapping command execution.
 
-## Installation
+## Usage
+
+Build the binary.
 
 ```bash
 cargo build --release
 ```
-
-## Usage
 
 Generate a challenge.
 
@@ -34,13 +34,13 @@ Run command after solving.
 pow run <difficulty> -- <command>
 ```
 
-## Environment Variables
+### Environment Variables
 
 | Variable | Description |
 | :--- | :--- |
 | `SOLVER_URL` | The URL of the solver script in `pow run`. Default: `goo.gle/kctf-pow` |
 
-## Use in your challenge
+### Use in your challenge
 
 Example Dockerfile:
 
