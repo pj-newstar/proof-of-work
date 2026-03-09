@@ -34,6 +34,12 @@ Run command after solving.
 pow run <difficulty> -- <command>
 ```
 
+## Environment Variables
+
+| Variable | Description |
+| :--- | :--- |
+| `SOLVER_URL` | The URL of the solver script in `pow run`. Default: `goo.gle/kctf-pow` |
+
 ## Use in your challenge
 
 Example Dockerfile:

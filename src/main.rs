@@ -13,7 +13,7 @@ fn main() {
     let cli = Cli::parse_args();
 
     let result = match cli.command {
-        Commands::Generate { difficulty, detail } => handle_gen(difficulty, detail),
+        Commands::Generate { difficulty, detail } => handle_generate(difficulty, detail),
         Commands::Solve { challenge, detail } => handle_solve(&challenge, detail),
         Commands::Check {
             challenge,
@@ -24,7 +24,7 @@ fn main() {
         Commands::Run {
             difficulty,
             exec_command,
-        } => handle_start(difficulty, exec_command),
+        } => handle_run(difficulty, exec_command),
     };
 
     if let Err(e) = result {
@@ -33,7 +33,7 @@ fn main() {
     }
 }
 
-fn handle_gen(difficulty: u32, detail: bool) -> Result<()> {
+fn handle_generate(difficulty: u32, detail: bool) -> Result<()> {
     // Check if difficulty is 0
     if difficulty == 0 {
         anyhow::bail!("Difficulty must be greater than 0");
@@ -119,7 +119,7 @@ fn handle_check(challenge: &str, solution: &str, detail: bool, quiet: bool) -> R
     Ok(())
 }
 
-fn handle_start(difficulty: u32, exec_command: Vec<String>) -> Result<()> {
+fn handle_run(difficulty: u32, exec_command: Vec<String>) -> Result<()> {
     if difficulty == 0 {
         // Proof of work disabled
         println!("== Proof of work: disabled ==");
