@@ -123,7 +123,9 @@ fn handle_run(difficulty: u32, exec_command: Vec<String>) -> Result<()> {
     if difficulty == 0 {
         // Proof of work disabled
         println!("== Proof of work: disabled ==");
-        return execute_command_if_present(exec_command);
+        io::stdout().flush()?;
+        let exit_code = execute_command_if_present(exec_command)?;
+        std::process::exit(exit_code);
     }
 
     // Generate challenge
@@ -152,8 +154,8 @@ fn handle_run(difficulty: u32, exec_command: Vec<String>) -> Result<()> {
             println!("Proof of work correct!");
             println!("============================");
             io::stdout().flush()?;
-            execute_command_if_present(exec_command)?;
-            io::stdout().flush()?;
+            let exit_code = execute_command_if_present(exec_command)?;
+            std::process::exit(exit_code);
         }
         Ok(false) => {
             println!("Proof of work verification failed.");
@@ -168,12 +170,12 @@ fn handle_run(difficulty: u32, exec_command: Vec<String>) -> Result<()> {
             std::process::exit(1);
         }
     }
-    Ok(())
+    // Ok(())
 }
 
-fn execute_command_if_present(exec_command: Vec<String>) -> Result<()> {
+fn execute_command_if_present(exec_command: Vec<String>) -> Result<i32> {
     if exec_command.is_empty() {
-        return Ok(());
+        return Ok(0);
     }
 
     // Execute the command
@@ -185,6 +187,8 @@ fn execute_command_if_present(exec_command: Vec<String>) -> Result<()> {
             .status()?
     };
 
-    // Exit with the same code as the command
-    std::process::exit(status.code().unwrap_or(1));
+    io::stdout().flush()?;
+    io::stderr().flush()?;
+    // return the exit code of the command
+    Ok(status.code().unwrap_or(1))
 }

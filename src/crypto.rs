@@ -19,7 +19,7 @@ impl Pow {
     pub fn solve(challenge: &str) -> Result<String> {
         let challenge_params = ChallengeParams::decode_challenge(challenge)
             .map_err(|e| anyhow::anyhow!("Failed to decode challenge: {}", e))?;
-        
+
         let solution = challenge_params.solve();
         Ok(solution)
     }
@@ -28,8 +28,9 @@ impl Pow {
     pub fn verify(challenge: &str, solution: &str) -> Result<bool> {
         let challenge_params = ChallengeParams::decode_challenge(challenge)
             .map_err(|e| anyhow::anyhow!("Failed to decode challenge: {}", e))?;
-        
-        let is_valid = challenge_params.check(solution)
+
+        let is_valid = challenge_params
+            .check(solution)
             .map_err(|e| anyhow::anyhow!("Failed to verify solution: {}", e))?;
 
         Ok(is_valid)
