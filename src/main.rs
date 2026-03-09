@@ -151,19 +151,24 @@ fn handle_start(difficulty: u32, exec_command: Vec<String>) -> Result<()> {
         Ok(true) => {
             println!("Proof of work correct!");
             println!("============================");
-            execute_command_if_present(exec_command)
+            io::stdout().flush()?;
+            execute_command_if_present(exec_command)?;
+            io::stdout().flush()?;
         }
         Ok(false) => {
             println!("Proof of work verification failed.");
             println!("============================");
+            io::stdout().flush()?;
             std::process::exit(1);
         }
         Err(_) => {
             println!("Proof of work verification failed.");
             println!("============================");
+            io::stdout().flush()?;
             std::process::exit(1);
         }
     }
+    Ok(())
 }
 
 fn execute_command_if_present(exec_command: Vec<String>) -> Result<()> {
