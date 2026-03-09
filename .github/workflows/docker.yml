@@ -1,6 +1,9 @@
 name: Docker
 
 on:
+  release:
+    types: [published]
+
   workflow_dispatch:
     inputs:
       image:
@@ -55,7 +58,7 @@ jobs:
           compression-level: 9
           retention-days: 1
 
-      - name: Push to ghcr
+      - name: Push to ghcr.io (dispatch)
         if: ${{ inputs.publish_tag != '' }}
         run: |
           image="${{ steps.build.outputs.image }}"
@@ -71,3 +74,20 @@ jobs:
           docker tag "$image" "$push_image"
           docker push "$push_image"
           echo "Pushed: $image to $push_image"
+
+      - name: Push to ghcr.io (release)
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          image="${{ steps.build.outputs.image }}"
+          echo "Pushing: $image"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          push_image_1="ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}"
+          push_image_2="ghcr.io/${{ github.repository }}:latest"
+          push_images=("$push_image_1" "$push_image_2")
+          for push_image in "${push_images[@]}"; do
+            push_image="$(echo "$push_image" | tr '[:upper:]' '[:lower:]')"
+            docker tag "$image" "$push_image"
+            docker push "$push_image"
+            echo "Pushed: $image to $push_image"
+          done
+
