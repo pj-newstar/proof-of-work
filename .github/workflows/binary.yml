@@ -3,10 +3,14 @@ name: Binary
 on:
   push:
     paths:
-      - '**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'src/**'
   pull_request:
     paths:
-      - '**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'src/**'
 
 jobs:
   clippy:
